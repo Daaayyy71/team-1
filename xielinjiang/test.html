@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table.table {
+            width: 80%;
+            min-width: 980px;
+            margin: 0 auto;
+        }
+
+        table td,
+        table th {
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .rest {
+            width: 80%;
+            min-width: 980px;
+            margin: 0 auto;
+            height: 60PX;
+            padding: 20px 0;
+        }
+
+        .add_btn {
+            float: right;
+        }
+
+        input {
+            outline: none;
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .red {
+            color: red
+        }
+
+        button {
+            padding: 5px 10px;
+        }
+
+        .model {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            width: 460px;
+            height: 460px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .model input~input {
+            /* text-align: center; */
+            margin-left: 130px;
+            margin-top: 30px;
+        }
+
+        .model input:nth-of-type(1) {
+            margin-left: 130px;
+            margin-top: 60px;
+        }
+
+        .model button {
+            float: right;
+            margin: 10px 10px;
+        }
+
+        .model .dete {
+            width: 60px;
+            height: 30px;
+            margin-left: 275px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <table class="table" cellspacing="0" cellspading="0" border="1">
+            <div class="rest">
+                <input type="text" v-model="serach" placeholder="请输入学号或姓名">
+                <button class="add_btn" @click="addModalShow">添加</button>
+            </div>
+            <tr>
+                <th>学号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>班级</th>
+                <th>操作</th>
+            </tr>
+            <tr v-for="item in stuList" :key="item.id">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.sexual}}</td>
+                <td>{{item.age}}</td>
+                <td>{{item.class}}</td>
+                <td>
+                    <button class="remove_btn" @click="remove(item.id)">删除</button>
+                    <button class="edit_btn" @click="editModalShow(item.id)">修改</button>
+                </td>
+            </tr>
+        </table>
+        <div class="model add" v-show="addShow">
+            <button @click="addModalHide">关闭</button>
+            <input type="text" placeholder="学号" v-model="addFrom.id">
+            <input type="text" placeholder="姓名" v-model="addFrom.name">
+            <input type="text" placeholder="性别" v-model="addFrom.sexual">
+            <input type="text" placeholder="年龄" v-model="addFrom.age">
+            <input type="text" placeholder="班级" v-model="addFrom.class">
+            <input type="button" class="dete" value="确定" @click="addTolist">
+        </div>
+        <div class="model edit" v-show="editShow">
+            <button @click="editModalHide">关闭</button>
+            <input type="text" placeholder="学号" v-model="editFrom.id" disabled>
+            <input type="text" placeholder="姓名" v-model="editFrom.name">
+            <input type="text" placeholder="性别" v-model="editFrom.sexual">
+            <input type="text" placeholder="年龄" v-model="editFrom.age">
+            <input type="text" placeholder="班级" v-model="editFrom.class">
+            <input type="button" class="dete" value="确定" @click="editFromlist(editFrom.id)">
+        </div>
+    </div>
+
+    <script src="vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: [
+                    { id: '2013020104', name: '欧阳倩', sexual: '女', age: '8', class: '三年二班' },
+                    { id: '2013020213', name: '李修冉', sexual: '男', age: '8', class: '三年二班' },
+                    { id: '2013020341', name: '冯跃', sexual: '女', age: '7', class: '三年二班' },
+                    { id: '2013020415', name: '云天青', sexual: '男', age: '8', class: '三年二班' },
+                    { id: '2013020155', name: '南宫煌', sexual: '男', age: '8', class: '三年二班' },
+                    { id: '2013020641', name: '景天', sexual: '男', age: '8', class: '三年二班' },
+                    { id: '2013020177', name: '云天河', sexual: '男', age: '8', class: '三年二班' },
+                    { id: '2013020834', name: '穆迪', sexual: '男', age: '8', class: '三年二班' }
+                ],
+                serach: "",
+                addFrom: {
+                    id: '',
+                    name: '',
+                    sexual: '',
+                    age: '',
+                    class: ''
+                },
+                editFrom: {
+                    id: '',
+                    name: '',
+                    sexual: '',
+                    age: '',
+                    class: ''
+                },
+                addShow: false,
+                editShow: false,
+            },
+            computed: {
+                stuList: function () {
+                    var that = this;
+                    return this.list.filter(function (item) {
+                        return item.id.indexOf(that.serach) >= 0 || item.name.indexOf(that.serach) >= 0
+                    })
+                }
+            },
+            methods: {
+                remove: function (id) {
+                    for (let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            this.list.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                addModalShow: function () {
+                    this.addShow = true;
+                },
+                addModalHide: function () {
+                    this.addShow = false;
+                    this.addFrom.id = '';
+                    this.addFrom.name = '';
+                    this.addFrom.sexual = '';
+                    this.addFrom.age = '';
+                    this.addFrom.class = '';
+                },
+                addTolist: function () {
+                    let obj = { ...this.addFrom }
+                    if (obj.id == '') {
+                        alert('请输入ID');
+                        return;
+                    }
+                    this.list.push(obj);
+                    this.addModalHide();
+                },
+                editModalShow: function (id) {
+                    this.editShow = true;
+                    let that = this;
+                    for (let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            that.editFrom.id = this.list[i].id;
+                            that.editFrom.name = this.list[i].name;
+                            that.editFrom.sexual = this.list[i].sexual;
+                            that.editFrom.age = this.list[i].age;
+                            that.editFrom.class = this.list[i].class;
+                            break;
+                        }
+                    }
+                },
+                editModalHide: function () {
+                    this.editShow = false;
+                    this.editShow.id = '';
+                    this.editShow.name = '';
+                    this.editShow.sexual = '';
+                    this.editShow.age = '';
+                    this.editShow.class = '';
+                },
+                editFromlist: function (id) {
+                    let that = this;
+                    for (let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            this.list[i].id = that.editFrom.id;
+                            this.list[i].name = that.editFrom.name;
+                            this.list[i].sexual = that.editFrom.sexual;
+                            this.list[i].age = that.editFrom.age;
+                            this.list[i].class = that.editFrom.class;
+                            break;
+                        }
+                    }
+                    this.editModalHide();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

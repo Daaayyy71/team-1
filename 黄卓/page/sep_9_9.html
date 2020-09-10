@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+    <link rel="stylesheet" href="../bootstrap/bootstrap.css">
+    <style>
+        * {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='stuInfo'>
+        <input type="text" v-model='search' placeholder="输入年龄">
+        <ul>
+            <li v-for='item in stuList' :key='item.id'>
+                {{item.id}}.{{item.name}}_{{item.sexual}}_{{item.age}} {{item.class}}
+                <button @click="del(item.id)">删除</button>
+                <button @click='show(item.id)'>编辑</button>
+            </li>
+        </ul>
+        <input type="text" v-model='addNew.id' name="" id="" placeholder="输入id">
+        <input type="text" v-model='addNew.name' name="" id="" placeholder="输入名字">
+        <input type="text" v-model='addNew.sexual' name="" id="" placeholder="输入性别">
+        <input type="text" v-model='addNew.age' name="" id="" placeholder="输入年龄">
+        <input type="text" v-model='addNew.class' name="" id="" placeholder="输入班级">
+        <button @click='add()'>添加</button><br>
+
+        <input type="text" v-model='editArr.id' name="" id="" placeholder="" disabled>
+        <input type="text" v-model='editArr.name' name="" id="" placeholder="">
+        <input type="text" v-model='editArr.sexual' name="" id="" placeholder="">
+        <input type="text" v-model='editArr.age' name="" id="" placeholder="">
+        <input type="text" v-model='editArr.class' name="" id="" placeholder="">
+        <button @click='edit(editArr.id)'>修改</button><br>
+
+
+    </div>
+
+</body>
+<script>
+    var vm = new Vue({
+        el: '#stuInfo',
+        data: {
+            search: '',
+            list: [
+                { id: '1', name: '欧阳', sexual: '女', age: '8', class: '3班' },
+                { id: '2', name: '李修', sexual: '男', age: '8', class: '3班' },
+                { id: '3', name: '冯跃', sexual: '女', age: '7', class: '1班' },
+                { id: '4', name: '南宫煌', sexual: '男', age: '9', class: '3班' },
+                { id: '5', name: '景天', sexual: '男', age: '8', class: '1班' },
+                { id: '6', name: '云柒', sexual: '男', age: '8', class: '1班' },
+                { id: '7', name: '柯芮', sexual: '女', age: '7', class: '1班' },
+                { id: '8', name: '冯柯', sexual: '女', age: '9', class: '2班' },
+            ],
+            addNew: {
+                id: '',
+                name: '',
+                sexual: '',
+                age: '',
+                class: ''
+            },
+            editArr:{
+                id: '',
+                name: '',
+                sexual: '',
+                age: '',
+                class: ''
+            }
+        },
+        methods: {
+            del: function (id) {
+                for (let i = 0; i < this.list.length; i++) {
+                    if (this.list[i].id == id) {
+                        this.list.splice(i, 1);
+                        break;
+                    }
+                }
+            },
+            add: function () {
+                if (this.addNew.id == 0 || this.addNew.name == 0) {
+                    alert('id和姓名不能为空');
+                } else {
+                    var obj;
+                    obj = { ...this.addNew };
+                    this.list.push(obj);
+                    this.addNew.id = '';
+                    this.addNew.name = '';
+                    this.addNew.sexual = '';
+                    this.addNew.age = '';
+                    this.addNew.class = '';
+                }
+            },
+            show: function (id) {
+                for (let i = 0; i < this.list.length; i++) {
+                    if (this.list[i].id == id) {
+                        this.editArr.id = this.list[i].id;
+                        this.editArr.name = this.list[i].name;
+                        this.editArr.sexual = this.list[i].sexual;
+                        this.editArr.age = this.list[i].age;
+                        this.editArr.class = this.list[i].class;
+                        break;
+                    }
+                }
+            },
+            edit: function (id) {
+                console.log(id);
+                for (let i = 0; i < this.list.length; i++) {
+                    if (this.list[i].id == id) {
+                        this.list[i].id = this.editArr.id;
+                        this.list[i].name = this.editArr.name;
+                        this.list[i].sexual = this.editArr.sexual;
+                        this.list[i].age = this.editArr.age;
+                        this.list[i].class = this.editArr.class;
+                        break;
+                    }
+                }
+            }
+        },
+        // mounted() {
+        //     this.$set(this.list, 'content', 'who is my girlfriend?');
+        // },
+        computed: {
+            stuList: function () {
+                return this.list.filter((item) => {
+                    return item.age.indexOf(this.search) >= 0;
+                })
+            }
+        }
+    })
+</script>
+
+</html>

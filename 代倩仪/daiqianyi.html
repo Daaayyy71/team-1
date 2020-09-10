@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dai</title>
+    <style>
+        #app tr td,
+        #app thead th {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model='searchInfo' placeholder="请输入查询日期">
+        <table>
+            <thead>
+                <th>日期</th>
+                <th>最高温度</th>
+                <th>最低温度</th>
+                <th>天气情况</th>
+                <th>操作</th>
+            </thead>
+            <tr v-for='item in searchClimate' :key='item.id'>
+                <td>{{item.date}}</td>
+                <td>{{item.max}}</td>
+                <td>{{item.min}}</td>
+                <td>{{item.climate}}</td>
+                <td><input type="button" value="删除" @click='delTr(item.date)'></td>
+            </tr>
+
+        </table>
+        <input type="text" v-model=' addTr.date' placeholder="date"><br />
+        <input type="text" v-model=' addTr.max' placeholder="max"><br />
+        <input type="text" v-model=' addTr.min' placeholder="min"><br />
+        <input type="text" v-model=' addTr.climate' placeholder="climate"><br />
+        <input type="button" value="添加" @click=' addTr'>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                searchInfo: '',
+                climateInfo: [
+                    { date: '09-09', max: '28', min: '21', climate: 'rainy' },
+                    { date: '09-10', max: '28', min: '19', climate: 'windy' },
+                    { date: '09-11', max: '26', min: '17', climate: 'rainy' },
+                    { date: '09-12', max: '22', min: '17', climate: 'rainy' },
+                    { date: '09-13', max: '20', min: '17', climate: 'rainy' },
+                    { date: '09-14', max: '20', min: '17', climate: 'rainy' },
+                    { date: '09-15', max: '18', min: '18', climate: 'windy' },
+                ]
+            },
+            computed: {
+                searchClimate() {
+                    var that = this;
+                    return this.climateInfo.filter(function (item) {
+                        return item.date.indexOf(that.searchInfo) >= 0
+                    })
+                }
+            },
+            methods: {
+                addTr(date) {
+                    var obj = { ...this.addTr };
+                    this.climateInfo.push(obj);
+                    this.addTr.date = '';
+                    this.addTr.max = '';
+                    this.addTr.min = '';
+                    this.addTr.climate = '';
+                },
+                delTr(date) {
+                    for (var i = 0; i < this.climateInfo.length; i++) {
+                        if (this.climateInfo[i].date == date) {
+                            this.climateInfo.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>

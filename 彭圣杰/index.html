@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap.min.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      input {
+        width: 200px !important;
+        height: 30px !important;
+      }
+      #app {
+        width: 1280px;
+        height: 720px;
+        margin: auto;
+        padding: 0 5%;
+      }
+      .modle div {
+        width: 250px;
+        height: 350px;
+        position: absolute;
+        top: 200px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        background-color: rgba(100, 149, 237, 0.6);
+      }
+      .modle {
+        position: relative;
+      }
+      .modle input {
+        margin: auto;
+      }
+      .modle button {
+        display: block;
+        margin: 0 auto;
+      }
+      .flex {
+        display: flex;
+        justify-content: space-around;
+      }
+      tr td {
+        text-align: center;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="modle">
+        <!-- 添加 -->
+        <div v-show="cache.addDiv">
+          编号<input
+            class="form-control"
+            v-model="addStuObj.stuID"
+            type="text"
+          /><br />
+          学号<input
+            class="form-control"
+            v-model="addStuObj.stuNum"
+            type="text"
+          /><br />
+          姓名<input
+            class="form-control"
+            v-model="addStuObj.name"
+            type="text"
+          /><br />
+          年级<input
+            class="form-control"
+            v-model="addStuObj.grade"
+            type="text"
+          /><br />
+          <button class="btn btn-success" @click="addStu">添加</button>
+        </div>
+        <!-- 修改 -->
+        <div v-show="cache.resetDiv">
+          编号<input
+            class="form-control"
+            v-model="resetStuObj.stuID"
+            type="text"
+          /><br />
+          学号<input
+            class="form-control"
+            v-model="resetStuObj.stuNum"
+            type="text"
+          /><br />
+          姓名<input
+            class="form-control"
+            v-model="resetStuObj.name"
+            type="text"
+          /><br />
+          年级<input
+            class="form-control"
+            v-model="resetStuObj.grade"
+            type="text"
+          /><br />
+          <button class="btn btn-success" @click="resetStuEnd">确认修改</button>
+        </div>
+      </div>
+      <div>
+        <!-- 查询 -->
+        <div>
+          编号
+          <input
+            style="display: inline-block; margin-right: 100px"
+            class="form-control"
+            v-model="searchValue"
+          />
+          年级
+          <select v-model="selected">
+            <option v-for="grade in gradeArr" v-bind:value="grade">
+              {{ grade }}
+            </option>
+          </select>
+          <button
+            style="float: right"
+            class="btn btn-success"
+            @click="cache.addDiv=true;"
+          >
+            添加数据
+          </button>
+          <button
+            style="float: right; margin-right: 200px"
+            class="btn btn-success"
+            @click="selectDel"
+          >
+            删除赛选
+          </button>
+        </div>
+        <table class="table table-bordered">
+          <tr>
+            <td>编号</td>
+            <td>学号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>年级</td>
+            <td>班级</td>
+            <td>年龄</td>
+            <td>操作</td>
+          </tr>
+          <tr v-for="(value,index) in searchStu" :key="index">
+            <td>{{value.stuID}}</td>
+            <td>{{value.stuNum}}</td>
+            <td>{{value.name}}</td>
+            <td>{{value.sex}}</td>
+            <td>{{value.grade}}</td>
+            <td>{{value.class}}</td>
+            <td>{{value.age}}</td>
+            <td class="flex">
+              <button class="btn btn-success" @click="resetStu(value.stuID)">
+                修改
+              </button>
+              <button class="btn btn-danger" @click="delStu(value.stuID)">
+                删除
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <script src="./vue.min.js"></script>
+    <script src="./localStorage.js"></script>
+    <script src="./index.js"></script>
+  </body>
+</html>

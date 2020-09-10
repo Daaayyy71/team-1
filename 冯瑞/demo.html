@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model = "search" placeholder="卡号"/>
+    <ul>
+        <li v-for="item in searchList" :key="item.id">
+            {{item.cardId}}---{{item.money}}----<button @click="del(item.id)">删除</button>
+            <button @click = "edits(item.id)">修改</button>
+        </li>
+    </ul>
+    <input type="text" v-model="addForm.id" placeholder="id" id="editId"/><br/>
+    <input type="text" v-model="addForm.cardId" placeholder="cardId"/><br/>
+    <input type="text" v-model="addForm.pwd" placeholder="pwd"/><br/>
+    <input type="text" v-model="addForm.money" placeholder="money"/><br/>
+    <button @click="add" id="addBtn">添加</button>
+    <button @click = "edits(item.id)" style="display: none">确定</button>
+</div>
+<script src="../vue.js"></script>
+<script src="../jquery.3.4.0.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            search:"",
+            list:[
+                {id: 1, cardId: "6225880287860549", pwd: "909090", money: 9000},
+                {id: 2, cardId: "6225880287862345", pwd: "666666", money: 100},
+                {id: 3, cardId: "6225880287861234", pwd: "888888", money: 5000},
+                {id: 4, cardId: "6225880287860549", pwd: "909090", money: 9000},
+                {id: 5, cardId: "6225880287862345", pwd: "666666", money: 100},
+                {id: 6, cardId: "6225880287861234", pwd: "888888", money: 5000},
+                {id: 7, cardId: "6225880287860549", pwd: "909090", money: 9000},
+                {id: 8, cardId: "6225880287862345", pwd: "666666", money: 100},
+                {id: 9, cardId: "6225880287861234", pwd: "888888", money: 5000}
+            ],
+            addForm:{
+                id:"",
+                cardId:"",
+                pwd:"",
+                money:""
+            }
+        },
+        computed:{
+            searchList:function(){
+//                var arr=[];
+//                for(var i =0;i<this.list.length;i++){
+//                    if(this.list[i].cardId.indexOf(this.search)>=0){
+//                        arr.push(this.list[i]);
+//                    }
+//                }
+//                return arr;
+                var that = this;
+               return this.list.filter(function(item){
+                    return item.cardId.indexOf(that.search)>=0
+                })
+            }
+        },
+        methods:{
+            del:function(id){
+                for(var i=0;i<this.list.length;i++){
+                   if(this.list[i].id == id){
+                       this.list.splice(i,1);
+                       break;
+                   }
+                }
+            },
+            edits:function(id){
+                for(var i=0;i<this.list.length;i++){
+                    $("#addBtn").hide();
+                    if(this.list[i].id==id){
+                        this.addForm.id = this.list[i].id;
+                        this.addForm.cardId = this.list[i].cardId;
+                        this.addForm.pwd = this.list[i].pwd;
+                        this.addForm.money =  this.list[i].money;
+                        $("#editId").attr("disabled","disabled")
+                    }
+                }
+            },
+            add:function(){
+                var obj = {...this.addForm};
+                this.list.push(obj);
+                this.addForm.id="";
+                this.addForm.cardId = "";
+                this.addForm.pwd = "";
+                this.addForm.money = "";
+            }
+
+
+</script>
+</body>
+</html>

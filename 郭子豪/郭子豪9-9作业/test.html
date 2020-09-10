@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text " v-model="search" placeholder="卡号">
+        <ul>
+            <li v-for="item in searchList" :key="item.id">
+                {{item.cardId}}-----{{item.money}} -- <button @click="del(item.id)">删除</button>
+            </li>
+        </ul>
+        <input type="text" v-model="addForm.id" placeholder="id"><br>
+        <input type="text" v-model="addForm.cardId" placeholder="cardId"><br>
+        <input type="text" v-model="addForm.pwd" placeholder="pwd"><br>
+        <input type="text" v-model="addForm.money" placeholder="money"><br>
+        <button @click="add">添加</button>
+    </div>
+    <script src="../vue/vue.js"></script>
+    <script type="text/javascript">
+    var vm=new Vue(
+        {
+            el:"#app",
+            data:{
+                search:"",
+                list:[
+                    {
+                        id:1,cardId:"465787987987987",pwd:"909054",money:5000
+                    },
+                    {
+                        id:2,cardId:"6245787987987987",pwd:"42354",money:400
+                    },
+                    {
+                        id:3,cardId:"879578798798797",pwd:"8209054",money:8000
+                    },
+                    {
+                        id:4,cardId:"987657879879987",pwd:"78509054",money:3000
+                    }
+                ],
+                addForm:{
+                    id:"",
+                    cardId:"",
+                    pwd:"",
+                    money:""
+                }
+            },
+            computed://计算属性
+            {
+                searchList:function()
+                {   
+                    var that=this;
+                    return this.list.filter( function(item)//es6方法，filter使用了返回一个数组
+                    {
+                    return item.cardId.indexOf(that.search)>=0
+                    })
+                    /* var arr=[];
+                    for(var i=0;i<this.list.length;i++)
+                    {
+                        if(this.list[i].cardId.indexOf(this.search)>=0)
+                        {
+                            arr.push(this.list[i]);
+                        }
+                    }
+                    return arr; 一般方法*/
+                }
+            },
+            methods:{
+                
+                del:function(id)//删除
+                {
+                    for(var i=0;i<this.list.length;i++)
+                    {
+                        if(this.list[i].id==id)
+                        {
+                            this.list.splice(i,1);
+                            break;
+                        }
+                    }
+                },
+                add:function(){
+                    var obj={...this.addForm};
+                    this.list.push(obj);
+
+                }
+            }
+        }
+    )
+    </script>
+</body>
+</html>
